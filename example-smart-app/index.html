@@ -64,6 +64,10 @@
           <th>HDL:</th>
           <td id='hdl'></td>
         </tr>
+        <tr>
+          <th>Temperature:</th>
+          <td id='temperature'></td>
+        </tr>
       </table>
       <h2>AllergyIntolerance Resource</h2>
       <div id='allergyIntolerance'>Loading...</div>
@@ -159,6 +163,7 @@ function extractData() {
 		  //old discouraged BP 55284-4
           var systolicbp = getBloodPressureValue(byCodes('85354-9'),'8480-6');
           var diastolicbp = getBloodPressureValue(byCodes('85354-9'),'8462-4');
+		  var temps = byCodes('8310-5');
           var hdl = byCodes('2085-9');
           var ldl = byCodes('2089-1');
 		  var allergyTable = "<table>";
@@ -195,6 +200,7 @@ function extractData() {
 
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
+		  p.temp = getQuantityValueAndUnit(temps[0]);
 		  
 		  p.allergies = allergyTable;
 
@@ -222,6 +228,7 @@ function defaultPatient(){
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
+	  temp: {value: ''},
 	  allergies: {value: ''}
     };
 }
@@ -288,6 +295,7 @@ function drawVisualization(p) {
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
+	$('#temperature').html(p.temp);
 	$('#allergyIntolerance').html(p.allergies);
 	
 };
