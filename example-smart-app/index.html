@@ -118,15 +118,15 @@ function extractData() {
         var patient = smart.patient;
         var pt = patient.read();
         var obv = smart.patient.api.fetchAll({
-                    type: 'Observation',
-                    query: {
-                      code: {
-                        $or: ['http://loinc.org|8302-2', 'http://loinc.org|85354-9',
+                    "type": 'Observation',
+                    "query": {
+                      "code": {
+                        "$or": ['http://loinc.org|8302-2', 'http://loinc.org|85354-9',
                               'http://loinc.org|2085-9',
                               'http://loinc.org|2089-1', 'http://loinc.org|8310-5']
                       },
-					  date: 'gt2020-01-01',
-					  category: 'vital-signs'
+					  "date": 'gt2020-01-01',
+					  "category": 'vital-signs'
                     }
                   });
 		
@@ -178,7 +178,7 @@ function extractData() {
 			  allergyTable += "<tr><td>"+allergies[i].code.text+"</td><td>"+reactionStr.join(", ")+"</td></tr>";
 		  }
 		  if (allergyLen === 0) {
-			  allergyTable += "<tr><td>No Allergies Found</td></tr>";
+			  allergyTable += "<tr><td>No Allergies Documented</td></tr>";
 		  }
 		  allergyTable += "</table>";
 
