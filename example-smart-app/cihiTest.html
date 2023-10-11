@@ -1,0 +1,66 @@
+<!-- CHLD_DC STI Rule -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>CIHI Test</title>
+	<style type="text/css">
+		.cihi-header,.cihi-data {position:relative;width:100%;overflow:auto;}
+		.cihi-header {font-size:1.1em;font-weight:bold;text-decoration:underline;}
+		#dataClick {margin-bottom:10px;}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<div class="cihi-header">Test Data</div>
+	<textarea cols=50 rows=25 class="cihi-data" id="testData">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2OTcwMjU3MjYyNjksIm5iZiI6MTY5NzAyNTcyMiwiZXhwIjoxNjk3MDI2MzI3LCJqdGkiOiJHTG5aNDlxc3ZpdG1YSkg1NlMtSmQiLCJpc3MiOiJpc2xhbmRfaGVhbHRoIiwic3ViIjoiQWNjZXNzUmVxdWVzdCBpc2xhbmRfaGVhbHRoIiwic2NvcGUiOiJJUlJTIiwiYXVkIjoie3thbXNVcmx9fSJ9.OnNUaNfy1AVOQpXWAlKwE1NS61OTeYhi81GBq8zgoqpcXWJEGM_c2fE8Lgp6ohD2DD2dbjvXFEx9sFJ1sjzczQIy5Zne8wP0iwr_0tao1kszh4hvTp4MeSQGsR2SjO9V4oOFPFWMaCSanwu4UCuy7MZwpgwU6z07nqp72Ve8bOE</textarea>
+	<button id="dataClick" onclick="runPage()">Run Data</button>
+	<div class="cihi-header">Results</div>
+	<div class="cihi-data" id="resultData"></div>
+</body>
+<script type="text/javascript">
+
+	var runPage = function() {
+		var dataString = document.getElementById("testData").innerHTML;
+			// WARNING: For POST requests, body is set to null by browsers.
+		var data = "grant_type=client_credentials&assertion="+dataString;
+		console.log(data);
+		var xhr = new XMLHttpRequest();
+		xhr.withCredentials = true;
+
+		xhr.addEventListener("readystatechange", function() {
+			if(this.status === 200 && this.readyState === 4) {
+				document.getElementById("resultData").innerHTML = xhr.response;
+			}
+			else if (this.readyState === 4) {
+				/*
+				var xhr2 = new XMLHttpRequest();
+				xhr2.withCredentials = true;
+				xhr2.addEventListener("readystatechange", function() {
+					if(xhr2.status === 200 && xhr2.readyState === 4) {
+						document.getElementById("resultData").innerHTML = xhr2.response;
+					}
+					else if (xhr2.readyState === 4) {
+						console.log("Status: "+xhr2.status);
+					}
+				});
+				xhr2.open("POST", "https://auth.api.cihi.ca/gateway/oauth/token");
+				xhr2.setRequestHeader("Access-Control-Allow-Origin", "*");
+				xhr2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				xhr2.setRequestHeader("Cache-Control", "no-cache");
+
+				xhr2.send(data);
+				*/
+				console.log("Status: "+this.status);
+			}
+		});
+
+		xhr.open("POST", "https://auth.api.cihi.ca/gateway/oauth/token");
+		xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.setRequestHeader("Cache-Control", "no-cache");
+
+		xhr.send(data);
+	};
+</script>
+</html>
