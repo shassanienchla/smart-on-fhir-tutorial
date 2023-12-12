@@ -117,9 +117,10 @@ function extractData() {
       if (smart.hasOwnProperty('patient')) {
         var patient = smart.patient;
         var pt = patient.read();
-        var obv = smart.patient.api.fetchAll({
+        var obv = smart.api.fetchAll({
                     "type": 'Observation',
                     "query": {
+		      "patient": smart.patient.id,
                       "code": {
                         "$or": ['http://loinc.org|8302-2', 'http://loinc.org|85354-9',
                               'http://loinc.org|2085-9',
@@ -140,6 +141,7 @@ function extractData() {
         $.when(pt, obv, alg).fail(onError);
 
         $.when(pt, obv, alg).done(function(patient, obv, allergies) {
+		console.log(smart.patient);
 		  console.log(patient);
 		  console.log(obv);
 		  console.log(allergies);
@@ -150,7 +152,7 @@ function extractData() {
           var monthIndex = dob.getMonth() + 1;
           var year = dob.getFullYear();
 
-          var dobStr = monthIndex + '/' + day + '/' + year;
+          var dobStr = patient.birthDate;//monthIndex + '/' + day + '/' + year;
           var fname = '';
           var lname = '';
 
