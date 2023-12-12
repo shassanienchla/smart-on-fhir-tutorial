@@ -140,6 +140,7 @@ function extractData() {
         $.when(pt, obv, alg).fail(onError);
 
         $.when(pt, obv, alg).done(function(patient, obv, allergies) {
+		console.log(smart.patient);
 		  console.log(patient);
 		  console.log(obv);
 		  console.log(allergies);
