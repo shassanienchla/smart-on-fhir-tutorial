@@ -121,6 +121,7 @@ function extractData() {
                     "type": 'Observation',
                     "query": {
 		      "patient": smart.patient.id,
+		      "_count": 100,
                       "code": {
                         "$or": ['http://loinc.org|8302-2', 'http://loinc.org|85354-9',
                               'http://loinc.org|2085-9',
@@ -134,7 +135,8 @@ function extractData() {
         var alg = smart.patient.api.fetchAll({
                     "type": 'AllergyIntolerance',
                     "query": {
-                      "clinical-status": 'active'
+                      "clinical-status": 'active',
+		      "_count": 100
                     }
                   });
 
