@@ -16,8 +16,8 @@
                     query: {
                       code: {
                         $or: ['http://loinc.org|8302-2', //Body Height
-                              'http://loinc.org|8462-4', //Diastolic bp
-                              'http://loinc.org|8480-6', //systolic bp
+                              //'http://loinc.org|8462-4', //Diastolic bp
+                              //'http://loinc.org|8480-6', //systolic bp
                               'http://loinc.org|2085-9', //hdl
                               'http://loinc.org|2089-1', //ldl
                               'http://loinc.org|2089-5', //temp
