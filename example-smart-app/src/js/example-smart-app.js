@@ -16,27 +16,29 @@
                     query: {
                       code: {
                         $or: ['http://loinc.org|8302-2', //Body Height
-                              //'http://loinc.org|8462-4', //Diastolic bp
+                              //'http://loinc.org|8462-4', //diastolic bp
                               //'http://loinc.org|8480-6', //systolic bp
                               'http://loinc.org|2085-9', //hdl
                               'http://loinc.org|2089-1', //ldl
-                              'http://loinc.org|2089-5', //temp
-                              'http://loinc.org|55284-4'] //bp
+                              'http://loinc.org|8310-5', //temp
+                              'http://loinc.org|85354-9'] //bp
                       }
                     }
                   });
+        var device = smart.patient.api.fetchAll({
+                   type: 'Device'})
 
-        $.when(pt, obv).fail(onError);
 
-        $.when(pt, obv).done(function(patient, obv) {
+        $.when(pt, obv, device).fail(onError);
+
+        $.when(pt, obv, device).done(function(patient, obv, device) {
           var byCodes = smart.byCodes(obv, 'code');
+          console.log (device);
           var gender = patient.gender;
-          var dob = new Date(patient.birthDate);
-          var day = dob.getDate();
-          var monthIndex = dob.getMonth() + 1;
-          var year = dob.getFullYear();
-
-          var dobStr = monthIndex + '/' + day + '/' + year;
+          var devicestring = [];
+          for (var i = 0;i < device.length; i++){ 
+          devicestring.push(device[i].deviceName[0].name);
+          }
           var fname = '';
           var lname = '';
 
@@ -46,18 +48,19 @@
           }
 
           var height = byCodes('8302-2');
-          var systolicbp = getBloodPressureValue(byCodes('55284-4'),'8480-6');
-          var diastolicbp = getBloodPressureValue(byCodes('55284-4'),'8462-4');
+          var systolicbp = getBloodPressureValue(byCodes('85354-9'),'8480-6');
+          var diastolicbp = getBloodPressureValue(byCodes('85354-9'),'8462-4');
           var hdl = byCodes('2085-9');
           var ldl = byCodes('2089-1');
+          var temp = byCodes('8310-5');
 
           var p = defaultPatient();
-          p.birthdate = dobStr;
+          p.birthdate = patient.birthDate;
           p.gender = gender;
           p.fname = fname;
           p.lname = lname;
-          p.age = parseInt(calculateAge(dob));
           p.height = getQuantityValueAndUnit(height[0]);
+          p.device = devicestring.join(", ");
 
           if (typeof systolicbp != 'undefined')  {
             p.systolicbp = systolicbp;
@@ -69,6 +72,7 @@
 
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
+          p.temp = getQuantityValueAndUnit(temp[0]);
 
           ret.resolve(p);
         });
@@ -88,12 +92,13 @@
       lname: {value: ''},
       gender: {value: ''},
       birthdate: {value: ''},
-      age: {value: ''},
       height: {value: ''},
       systolicbp: {value: ''},
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
+      temp: {value: ''},
+      device: {value: ''}
     };
   }
 
@@ -114,27 +119,6 @@
     return getQuantityValueAndUnit(formattedBPObservations[0]);
   }
 
-  function isLeapYear(year) {
-    return new Date(year, 1, 29).getMonth() === 1;
-  }
-
-  function calculateAge(date) {
-    if (Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date.getTime())) {
-      var d = new Date(date), now = new Date();
-      var years = now.getFullYear() - d.getFullYear();
-      d.setFullYear(d.getFullYear() + years);
-      if (d > now) {
-        years--;
-        d.setFullYear(d.getFullYear() - 1);
-      }
-      var days = (now.getTime() - d.getTime()) / (3600 * 24 * 1000);
-      return years + days / (isLeapYear(now.getFullYear()) ? 366 : 365);
-    }
-    else {
-      return undefined;
-    }
-  }
-
   function getQuantityValueAndUnit(ob) {
     if (typeof ob != 'undefined' &&
         typeof ob.valueQuantity != 'undefined' &&
@@ -153,12 +137,13 @@
     $('#lname').html(p.lname);
     $('#gender').html(p.gender);
     $('#birthdate').html(p.birthdate);
-    $('#age').html(p.age);
     $('#height').html(p.height);
     $('#systolicbp').html(p.systolicbp);
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
+    $('#temp').html(p.temp);
+    $('#device').html(p.device);
   };
 
 })(window);
